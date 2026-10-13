@@ -1,0 +1,5 @@
+The attached PDF is the official exam guide for the Claude Certified Architect Foundations exam. Using only this guide, build me a one-page study map.
+Exam basics: items, time, passing score, and how the scenarios work.
+Domains: all five, heaviest first, with each weight and roughly how many of the 60 items that means.
+Scenarios: a table of the six scenarios and their primary domains. Then count how many scenarios list each domain.
+Label every estimate as an estimate. Don't guess: end with a short section called "What the guide doesn't say".
