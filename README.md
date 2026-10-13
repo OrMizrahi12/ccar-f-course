@@ -7,7 +7,7 @@ This is independent training material. It is not affiliated with or endorsed by 
 ## Layout
 - `lessons/<id>/`: everything a lesson uses or produces, exactly as it stands at the end of that lesson (for example `lessons/0.1/`). Each folder has a README that says what every file is and how to reproduce the lesson.
 - `labs/L<n>/` (from Module 1): `starter/`, `solution/` and self-check tests for each module lab.
-- `setup/` (from Section 0): setup guides for Windows, macOS and Linux.
+- Setup guides for Windows, macOS and Linux: `lessons/0.3/` (`setup-windows.md`, `setup-macos.md`, `setup-linux.md`), with the workbench project files in `lessons/0.3/hello-claude/`.
 
 ## Before you start
 - Lessons that use the Claude app (like 0.1) need only a Claude account.
