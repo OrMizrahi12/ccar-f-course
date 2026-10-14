@@ -1,0 +1,28 @@
+Lesson 1.3: Tool use from first principles. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the python command on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The two files are in this kit, at loop/tools.py and experiments/m1/manual_tool_call.py: type them, or copy them into your harborline folder.
+
+1. Define
+   cd ~/projects/harborline
+   git status --short                       (prints nothing: a clean tree after Lesson 1.2)
+   mkdir loop
+   code loop/tools.py                       type GET_CUSTOMER, LOOKUP_ORDER, TOOLS and HANDLERS (lines 1-40)
+
+2. Round trip
+   (still in loop/tools.py)                 type run_tool (lines 43-54), save
+   code experiments/m1/manual_tool_call.py  type the file, save
+   clear; python -m experiments.m1.manual_tool_call
+                                            two [tool_use] lines from one response, two [tool_result] lines,
+                                            then end_turn and Claude's answer about order HL-10196
+
+3. Report a failure
+   clear; python -m experiments.m1.manual_tool_call bad
+                                            lookup_order gets '12345': its [tool_result] says is_error=True,
+                                            then Claude asks the customer for the right order ID
+   git status --short                       ?? experiments/m1/manual_tool_call.py   ?? loop/
+   git add loop experiments/m1/manual_tool_call.py
+   git commit -m "Lesson 1.3: tool definitions and a tool round trip by hand"
+   git push                                 to origin, your own harborline
+
+Never print your key: no cat .env, no echo of ANTHROPIC_API_KEY. The script loads it from .env and never shows it.
