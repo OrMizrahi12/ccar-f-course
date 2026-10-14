@@ -1,0 +1,33 @@
+Lesson 1.2: Reading the response. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in PowerShell every line works as written; in cmd.exe use "cls &" instead of "clear;" (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The three files are in this kit: harborline/usage.py and experiments/m1/. Type them, or copy them into your harborline folder.
+
+1. Log every call
+   cd ~/projects/harborline
+   git status --short                                    (prints nothing: a clean tree)
+   code harborline/usage.py                              type the file, save
+
+2. Read a reply
+   code experiments/m1/read_response.py                  type the file, save
+   clear; python -m experiments.m1.read_response plain   blocks, usage, both IDs, end_turn, next step: done
+   clear; python -m experiments.m1.read_response tool    [tool_use] lookup_order, stop_reason: tool_use
+   In the editor: Ctrl+G, 47                             next_step(): a match on stop_reason
+   code runs/usage.jsonl                                 one line per call: request_id, tokens, cost_usd
+
+3. Chat, turn by turn
+   code experiments/m1/conversation.py                   type the file, save
+   clear; python -m experiments.m1.conversation
+     You: Hi, I'm Elijah. Can I cancel order HL-10196 before it ships?
+     You: And if it already shipped?
+     You: How long will the refund take?
+     You: quit
+
+4. Commit
+   git status --short                                    3 new files; no runs/ (git ignores it)
+   git add harborline/usage.py experiments/m1/read_response.py experiments/m1/conversation.py
+   git commit -m "Lesson 1.2: read responses, handle stop reasons, log usage"
+   git push                                              to origin, your own harborline
+
+Never print your key: no cat .env, no echo of ANTHROPIC_API_KEY. The scripts load it from .env and never show it.
+The usage log (runs/usage.jsonl) stays on your machine: runs/ is in .gitignore.
