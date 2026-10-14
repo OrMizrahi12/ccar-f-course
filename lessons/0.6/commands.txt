@@ -1,0 +1,34 @@
+Lesson 0.6: Meet Harborline. Every command typed in the lesson, in order (macOS and Linux).
+Windows (PowerShell): see "Windows, macOS and Linux" in README.md for the three commands that differ.
+
+1. Clone (in VS Code's terminal)
+   deactivate                (only if the prompt starts with (.venv))
+   cd ~/projects
+   git clone https://github.com/OrMizrahi12/harborline-starter.git harborline
+   cd harborline
+   code -r .
+   VS Code: Restricted Mode banner > Manage > Trust
+
+2. Install and test (Ctrl+` opens the terminal in the harborline folder)
+   python3 -m venv .venv
+   source .venv/bin/activate
+   VS Code: "We noticed a new environment has been created..." > Yes
+   pip install -r requirements.txt
+   pytest
+   python -m scripts.check_setup
+
+3. Cost habits
+   Open harborline/config.py (MODEL, MAX_TOKENS, BUSINESS_DATE) and harborline/costs.py (PRICES, BATCH_DISCOUNT)
+   cp .env.example .env
+   python -m scripts.check_setup
+   Open .env, paste your own key right after ANTHROPIC_API_KEY= and save (never in code, never in a chat)
+   python -m scripts.check_setup
+   python -m scripts.count_tokens data/refund_policy.md data/orders.json
+
+4. Make it yours (run gh repo create once)
+   git remote -v
+   git remote rename origin upstream
+   git remote -v
+   gh repo create harborline --private --source . --remote origin --push
+   git remote -v
+   Browser: https://github.com/YOUR-USERNAME/harborline
