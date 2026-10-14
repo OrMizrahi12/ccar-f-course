@@ -1,0 +1,30 @@
+Lesson 0.5: Install Claude Code. Everything typed into Claude Code in the lesson, in order.
+Start Claude Code in your project folder: cd ~/projects/hello-claude, then claude.
+
+1. Choose the model
+   /model
+   Arrow down to Haiku 5.5. Leave the effort at Medium (the default). Press Enter to save it as your default.
+
+2. Switch to Manual mode
+   Press Shift+Tab once. The footer changes from "auto mode on" to "manual mode on".
+
+3. Prompt 1 (Claude only reads files, so it doesn't ask first)
+Read first_call.py and requirements.txt. In three sentences, what does this project do?
+
+4. Prompt 2 (Claude asks before it creates a file: choose Yes)
+Add a short README.md that explains how to set up and run this project.
+
+5. Prompt 3 (Claude asks before it runs a command: choose No, press Tab, type the reason below, press Enter)
+Run first_call.py to check that it still works.
+
+   The reason typed after No:
+No need: running it spends API credit, and it ran in the last lesson.
+
+6. Leave Claude Code
+   /exit
+
+7. Commit the README (in the shell, one command at a time)
+   git status
+   git add README.md
+   git commit -m "Add a README"
+   git push
