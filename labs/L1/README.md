@@ -1,6 +1,6 @@
 # Lab 1: a raw agentic loop that handles every stop reason
 
-Claude Certified Architect – Foundations (CCAR-F) · Module 1: How Claude runs an agent · the module checkpoint
+Claude Certified Architect – Foundations (CCAR-F) · Module 1: Claude API Foundations for Architects · the module checkpoint
 
 In Lesson 1.4 you wrote Harborline's agentic loop. It runs tools while `stop_reason` is `"tool_use"`, returns on `"end_turn"`, and raises `LoopStopped` for everything else. That was the right first rule: a cut-off reply is not an answer. In this lab you give every stop reason its own handling, and you prove each branch with tests that need no API key.
 
