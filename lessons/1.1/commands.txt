@@ -1,0 +1,27 @@
+Lesson 1.1: How Claude reads a request. Every command typed in the lesson, in order (macOS and Linux).
+Windows: only "mkdir -p experiments/m1" differs; use "mkdir experiments\m1" (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The three files are in this kit under experiments/m1/: type them, or copy them into your harborline folder.
+
+1. Count
+   cd ~/projects/harborline
+   git status --short                       (prints nothing: a clean tree)
+   mkdir -p experiments/m1
+   code experiments/m1/budget.py            type the file, save
+   python -m experiments.m1.budget          the model's limits + 3 token counts (free, no model run)
+
+2. Send
+   code experiments/m1/first_request.py     type the file, save
+   python -m experiments.m1.first_request   MAX_TOKENS = 1024: [thinking], [text], end_turn
+   Edit line 8 to:  MAX_TOKENS = 40  # the ceiling for this reply, thinking included   then save
+   python -m experiments.m1.first_request   [thinking] only, stop_reason: max_tokens
+   Edit line 8 back to:  MAX_TOKENS = 1024  # the ceiling for this reply, thinking included   then save
+
+3. Converse
+   code experiments/m1/stateless.py         type the file, save
+   python -m experiments.m1.stateless       3 requests: first / no history / full history
+   git add experiments
+   git commit -m "Lesson 1.1: count, send and converse experiments"
+   git push                                 to origin, your own harborline
+
+Never print your key: no cat .env, no echo of ANTHROPIC_API_KEY. The scripts load it from .env and never show it.
