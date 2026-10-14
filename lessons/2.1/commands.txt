@@ -1,0 +1,32 @@
+Lesson 2.1: Tool descriptions that route correctly. Every command typed in the lesson, in order (macOS and Linux).
+Windows: use "mkdir experiments\m2" (no -p); in cmd.exe use "cls" instead of "clear", and run the python command on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The two files are in this kit, at loop/tools.py and experiments/m2/routing_eval.py: type them, or copy them into your harborline folder.
+
+1. Measure the first drafts
+   cd ~/projects/harborline
+   git status --short                       (prints nothing: a clean tree after Lab 1)
+   code loop/tools.py                       Lesson 1.3's two tools; add import policy, get_customer's optional name,
+                                            three new tools with one-line first drafts (list_orders, process_refund,
+                                            escalate_to_human), TOOLS, three handlers; save
+   mkdir -p experiments/m2
+   code experiments/m2/routing_eval.py      type the file (Ctrl+J hides the terminal panel while you type), save
+   clear; python -m experiments.m2.routing_eval before
+                                            24 rows (16 labeled, 8 held out), then one "before:" line; about a minute
+
+2. Write descriptions that route
+   code loop/tools.py                       rewrite the five description strings and lookup_order's order_id line;
+                                            no names, no schemas, no code; save
+
+3. Measure again
+   clear; python -m experiments.m2.routing_eval after
+                                            the same 24 rows, with "was N/3" where a score moved, then the
+                                            "before:" and "after:" lines
+
+4. Commit
+   git status --short                       M loop/tools.py   ?? experiments/m2/
+   git add loop/tools.py experiments/m2/routing_eval.py
+   git commit -m "Lesson 2.1: tool descriptions that route, measured before and after"
+   git push                                 to origin, your own harborline
+
+Never print your key: no cat .env, no echo of ANTHROPIC_API_KEY. The scripts load it from .env and never show it.
