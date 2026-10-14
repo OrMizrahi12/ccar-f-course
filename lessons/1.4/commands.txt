@@ -1,0 +1,30 @@
+Lesson 1.4: The agentic loop. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the python command on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The two files are in this kit, at loop/agent.py and experiments/m1/antipatterns.py: type them, or copy them into your harborline folder.
+
+1. Write the loop
+   cd ~/projects/harborline
+   git status --short                       (prints nothing: a clean tree after Lesson 1.3)
+   code loop/tools.py                       a quick look only: Lesson 1.3's file, not changed in this lesson
+   code loop/agent.py                       type the file (Ctrl+J hides the terminal panel while you type), save
+
+2. Run it on two tickets
+   clear; python -m loop.agent T-003        turn 1: tool_use (get_customer), turn 2: tool_use (lookup_order),
+                                            turn 3: end_turn and the answer, then the History block
+   clear; python -m loop.agent T-016        turn 2 asks for two lookup_order calls in one response; in the lesson
+                                            turn 3 stopped on max_tokens and the loop raised LoopStopped
+
+3. Three stop rules that fail
+   code experiments/m1/antipatterns.py      type the file, save
+   clear; python -m experiments.m1.antipatterns T-003
+                                            one real run, then four verdicts: stop_reason OK; done_words,
+                                            fixed_cap and any_text get it wrong
+
+4. Commit
+   git status --short                       ?? experiments/m1/antipatterns.py   ?? loop/agent.py
+   git add loop/agent.py experiments/m1/antipatterns.py
+   git commit -m "Lesson 1.4: the agentic loop and three stop-rule anti-patterns"
+   git push                                 to origin, your own harborline
+
+Never print your key: no cat .env, no echo of ANTHROPIC_API_KEY. The scripts load it from .env and never show it.
