@@ -1,0 +1,28 @@
+Lesson 1.5: Who decides: model-driven agents vs fixed workflows. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the python command on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The two files are in this kit, at loop/workflow.py and experiments/m1/who_decides.py: type them, or copy them into your harborline folder.
+
+1. Fix the path
+   cd ~/projects/harborline
+   git status --short                       (prints nothing: a clean tree after Lesson 1.4)
+   code loop/agent.py                       a quick look only: Lesson 1.4's run(), tools=TOOLS; not changed in this lesson
+   code loop/workflow.py                    type the file (Ctrl+J hides the terminal panel while you type), save
+   clear; python -m loop.workflow T-008     route: status, one order checked, calls: 2, then the reply
+
+2. Where the path ends
+   clear; python -m loop.workflow T-004     route: refund, one order checked (HL-10164) out of the two in the ticket
+
+3. Measure, then decide
+   code experiments/m1/who_decides.py       type the file, save
+   clear; python -m experiments.m1.who_decides
+                                            ten rows (each ticket through the workflow, then the agent),
+                                            then one totals line per design; about a minute
+
+4. Commit
+   git status --short                       ?? experiments/m1/who_decides.py   ?? loop/workflow.py
+   git add loop/workflow.py experiments/m1/who_decides.py
+   git commit -m "Lesson 1.5: a fixed routing workflow next to the agent"
+   git push                                 to origin, your own harborline
+
+Never print your key: no cat .env, no echo of ANTHROPIC_API_KEY. The scripts load it from .env and never show it.
