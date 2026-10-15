@@ -1,0 +1,38 @@
+Lesson 2.3: How many tools, and tool_choice. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the python command on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The files are in this kit: experiments/m2/routing_eval.py (one line changed), experiments/m2/tool_count.py,
+loop/agent.py and experiments/m2/tool_choice.py. Type them, or copy them into your harborline folder.
+
+1. Eighteen tools or six
+   cd ~/projects/harborline
+   git status --short                       (prints nothing: a clean tree after Lesson 2.2)
+   code experiments/m2/routing_eval.py      line 21: add , "check_refund" to LOOKUPS; save
+   code experiments/m2/tool_count.py        type the file (Ctrl+J hides the terminal panel while you type), save
+   clear; python -m experiments.m2.tool_count
+                                            24 requests, three tries each, with 6 tools and with 18, side by
+                                            side; rows only where the two sets differ, then the table;
+                                            a little over a minute
+
+2. Scope tools to a role
+   code loop/agent.py                       import the five tool constants, add the comment and ROLE_TOOLS
+                                            after SYSTEM, send tools=ROLE_TOOLS; save
+   pytest -q                                54 passed
+   clear; python -m loop.agent T-003        the role agent on the lamp refund: get_customer, lookup_order,
+                                            check_refund, then its answer
+
+3. Who decides: tool_choice
+   code experiments/m2/tool_choice.py       type the file, save
+   clear; python -m experiments.m2.tool_choice
+                                            Haiku 5.5: auto, any, tool, none, asked; five calls
+   python -m experiments.m2.tool_choice claude-sonnet-5-5
+                                            Sonnet 5.5: any and tool print a 400; the other three run
+
+4. Commit
+   git status --short                       M experiments/m2/routing_eval.py   M loop/agent.py
+                                            ?? experiments/m2/tool_choice.py   ?? experiments/m2/tool_count.py
+   git add experiments/m2 loop/agent.py
+   git commit -m "Lesson 2.3: tool count, a role tool list, tool_choice settings"
+   git push                                 to origin, your own harborline
+
+Never print your key: no cat .env, no echo of ANTHROPIC_API_KEY. The scripts load it from .env and never show it.
