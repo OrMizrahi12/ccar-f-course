@@ -1,0 +1,37 @@
+Lesson 2.7: Built-in tools: Read, Write, Edit, Bash, Grep, Glob. Every command and prompt typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The kit's legacy/warehouse/records.py is the file after the lesson's one Edit: compare it with yours.
+No API calls: Claude Code runs on your Claude sign-in.
+
+1. The default tool set
+   cd ~/projects/harborline
+   clear; claude
+     Where does the name getStatus come from? Trace it to the function that actually runs, file by file.
+                                            Bash(git grep ...) on macOS, Linux and WSL; then the chain:
+                                            codes.py -> compat.py (getStatus = status_name) -> __init__.py -> the test
+     Ctrl+O                                 the detailed transcript; Ctrl+O again hides it
+     /exit
+
+2. Grep and Glob as tools
+   clear; claude --allowedTools Grep Glob
+     Where does the name getStatus come from? Trace it to the function that actually runs, file by file.
+                                            the Grep tool: "Searched for 1 pattern, read 3 files"; the same chain
+     Ctrl+O                                 Ctrl+O again hides it
+     Find every Python test file in this repo, names like test_*.py, at any depth.
+                                            Glob "**/test_*.py": nine files in tests/ (plus .venv matches, left out)
+     Ctrl+O                                 Ctrl+O again hides it
+
+3. One Edit, one anchor (the same session)
+     In legacy/warehouse/records.py, rename the local variable record to order inside read_record.
+                                            Read, then one Edit with the function's body as the anchor
+     Ctrl+O                                 the whole diff; Ctrl+O again hides it
+     Run the legacy tests.                  pytest tests/test_legacy.py -v: 3 passed
+     /exit
+
+4. Commit
+   clear; git diff --stat                   legacy/warehouse/records.py | 12 ++++++------
+   git diff                                 only the variable's name changes
+   git add legacy/warehouse/records.py
+   git commit -m "Lesson 2.7: rename a local variable with one Edit (a unique anchor)"
+   git push                                 to origin, your own harborline
