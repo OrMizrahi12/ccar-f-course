@@ -1,0 +1,37 @@
+Lesson 3.6: Multi-concern requests and handoffs. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+Your ANTHROPIC_API_KEY must be in .env (Lessons 0.4 and 0.6). Each check makes 6 short agent runs (about half a cent).
+
+1. Measure
+   cd ~/projects/harborline
+   git status --short                       prints nothing: a clean tree after Lesson 3.5
+   code support/case_check.py               type the file (or copy it from the kit), save
+   clear; python -m support.case_check 2> runs/case_check.log
+                                            requests answered 7/9 · hand-offs complete 0/3
+
+2. The hand-off
+   code support/handoff.py                  type the file (or copy it from the kit), save
+   code support/tools.py                    line 15: from loop.tools import PROCESS_REFUND
+                                            after "from support import gates": from support.handoff import HANDOFF
+                                            the escalate_to_human decorator: HANDOFF["description"], HANDOFF["input_schema"]
+                                            the backend call: order_id, reason=args["root_cause"], amount,
+                                            recommended_action, summary (see README.md), save
+
+3. The policy
+   code support/prompts/system.md           the "Several requests in one message" section, the hand-off
+                                            paragraph, and "## The refund policy" + {policy} (see README.md), save
+   code support/agent.py                    from harborline import data
+                                            SYSTEM = (PROMPT.read_text().replace("{date}", str(BUSINESS_DATE))
+                                                      .replace("{policy}", data.refund_policy()))
+                                            save
+
+4. Measure again
+   clear; python -m support.case_check 2> runs/case_check.log
+                                            requests answered 9/9 · hand-offs complete 3/3
+
+5. Commit
+   clear; git status --short                 M agent.py, M prompts/system.md, M tools.py, ?? case_check.py, ?? handoff.py
+   git add support
+   git commit -m "Lesson 3.6: a structured hand-off, and the policy as shared context"
+   git push                                 to origin, your own harborline
