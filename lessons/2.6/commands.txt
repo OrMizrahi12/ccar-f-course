@@ -1,0 +1,56 @@
+Lesson 2.6: MCP in Claude Code: scopes, secrets, and many servers at once. Every command typed in the lesson, in order (macOS and Linux).
+Windows: the server's command, the export line and "clear" differ (see README.md, Windows, macOS and Linux).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The files are in this kit: .mcp.json, .env.example and mcp_server/server.py (the final files).
+Before you start: add HARBORLINE_API_TOKEN=hl_test_ plus any letters and digits to your .env (git-ignored).
+No API calls: Claude Code runs on your Claude sign-in.
+
+1. Pick a scope
+   cd ~/projects/harborline
+   clear; claude mcp list                   the servers Claude Code already knows (yours depend on your account)
+   clear; claude mcp add harborline -- .venv/bin/python -m mcp_server.server
+                                            no scope flag: local config (~/.claude.json, under this project)
+   claude mcp get harborline                Scope: Local config (private to you in this project); Connected
+   clear; claude mcp remove harborline -s local
+   claude mcp add --scope project harborline -- .venv/bin/python -m mcp_server.server
+                                            project config: .mcp.json at the root of the repo
+   code .mcp.json                           a look: mcpServers, harborline, "type": "stdio", "env": {}
+   clear; claude mcp add --scope user memory -- npx -y @modelcontextprotocol/server-memory@2026.8.31
+                                            user config: private, every project
+   clear; claude mcp list                   wait for the health check: memory Connected, harborline Pending approval
+
+2. Keep the token out of git
+   code mcp_server/server.py                add "import os" and "import sys" under "import json";
+                                            MCPServer("harborline", instructions=(...)); before app.run(), exit with
+                                            "Set HARBORLINE_API_TOKEN: see .env.example" unless the token starts with hl_; save
+   code .mcp.json                           "env": {"HARBORLINE_API_TOKEN": "${HARBORLINE_API_TOKEN}"}; save
+   code .env.example                        two comment lines and HARBORLINE_API_TOKEN= (empty); save
+   clear; claude mcp list                   MCP config diagnostics: Missing environment variables: HARBORLINE_API_TOKEN
+   clear; export HARBORLINE_API_TOKEN="$(grep '^HARBORLINE_API_TOKEN=' .env | cut -d= -f2-)"
+                                            sets only that one variable, prints nothing
+   claude mcp list                          no diagnostics
+   clear; claude mcp get harborline         Environment: HARBORLINE_API_TOKEN=${HARBORLINE_API_TOKEN} (by name)
+   git status --short                       M .env.example   M mcp_server/server.py   ?? .mcp.json
+   git check-ignore -v .env                 .gitignore:9:.env
+
+3. Several servers at once (in the same terminal, so Claude Code gets the variable)
+   clear; claude
+     Down, Enter                            Yes, I trust this folder
+     Up, Up, Enter                          Use this MCP server
+     /mcp                                   Project MCPs: harborline 4 tools; User MCPs: memory 9 tools. Esc closes it
+     Look through the order data: what did customer C-1047 buy most recently, and when?
+                                            Called harborline: HL-10192, October 8, 2026
+     Ctrl+O                                 harborline - list_orders (MCP)(customer_id: "C-1047"); Ctrl+O again hides it
+     Add C-1047 and that order to the memory server's knowledge graph.
+                                            Called memory 2 times
+     Ctrl+O                                 create_entities, create_relations; Ctrl+O again hides it
+     /exit
+
+4. Commit
+   clear; git status --short
+   git add .mcp.json .env.example mcp_server/server.py
+   git commit -m "Lesson 2.6: harborline-mcp in Claude Code, token from the environment"
+   git push                                 to origin, your own harborline
+
+Never print a token or a key: no cat .env, no echo of HARBORLINE_API_TOKEN or ANTHROPIC_API_KEY.
+Keep the memory server and the harborline approval: later lessons use them.
