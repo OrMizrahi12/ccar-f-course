@@ -1,0 +1,34 @@
+Lesson 2.5: MCP from zero: build a server. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The files are in this kit: requirements.txt, mcp_server/server.py and tests/test_mcp_server.py.
+Type them, or copy them into your harborline folder. No API key is used and no model is called: $0.
+
+1. Install and write
+   cd ~/projects/harborline
+   git status --short                       (prints nothing: a clean tree after Lesson 2.4)
+   code requirements.txt                    line 5: mcp==2.3.0; save
+   clear; pip install -r requirements.txt   installs mcp 2.3.0 and its dependencies
+   code mcp_server/server.py                type the file (Ctrl+J hides the terminal panel while you type), save;
+                                            VS Code creates the mcp_server folder
+
+2. Test it in memory
+   code tests/test_mcp_server.py            type the file, save
+   clear; pytest -q                         57 passed
+
+3. The MCP Inspector (needs Node.js 22.19 or newer)
+   clear; npx @modelcontextprotocol/inspector@2.10.1 python -m mcp_server.server
+                                            first run: "Ok to proceed? (y)" -> y; the Inspector opens in your browser.
+                                            Its address carries a session token: don't share it.
+   In the browser: Connect; Tools: lookup_order, Order Id HL-10211, Execute tool (Tool Error: transient),
+   close it and Execute again (the order); list_orders, Customer ID C-1058 ([]); Resources: refund_policy;
+   Prompts: order_help, order_id HL-10163, Get prompt.
+   Ctrl+C in the terminal                   stops the Inspector
+
+4. Commit
+   clear; git status --short                M requirements.txt   ?? mcp_server/   ?? tests/test_mcp_server.py
+   git add requirements.txt mcp_server tests/test_mcp_server.py
+   git commit -m "Lesson 2.5: harborline-mcp server, in-memory tests"
+   git push                                 to origin, your own harborline
+
+Never print your key: no cat .env, no echo of ANTHROPIC_API_KEY.
