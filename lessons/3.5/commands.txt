@@ -1,0 +1,30 @@
+Lesson 3.5: Escalation and ambiguity. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+Your ANTHROPIC_API_KEY must be in .env (Lessons 0.4 and 0.6). Each check makes 5 short agent runs (well under a cent).
+
+1. Measure
+   cd ~/projects/harborline
+   git status --short                       prints nothing: a clean tree after Lesson 3.4
+   code support/escalation_check.py         type the file (or copy it from the kit), save
+   clear; python -m support.escalation_check 2> runs/escalation_check.log
+                                            right call 5/5 · asked for a person, handed over at once 0/2
+
+2. The criteria
+   clear; mkdir support/prompts
+   code support/prompts/system.md           type the file (or copy it from the kit), save
+   code support/agent.py                    after "import sys": from pathlib import Path
+                                            replace the SYSTEM = (...) block (8 lines) with:
+                                            PROMPT = Path(__file__).parent / "prompts" / "system.md"
+                                            SYSTEM = PROMPT.read_text().replace("{date}", str(BUSINESS_DATE))
+                                            save
+
+3. Measure again
+   clear; python -m support.escalation_check 2> runs/escalation_check.log
+                                            right call 5/5 · asked for a person, handed over at once 2/2
+
+4. Commit
+   clear; git status --short                 M support/agent.py, ?? support/escalation_check.py, ?? support/prompts/
+   git add support
+   git commit -m "Lesson 3.5: escalation criteria and examples, in a prompt file"
+   git push                                 to origin, your own harborline
