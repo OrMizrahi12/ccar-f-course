@@ -1,0 +1,34 @@
+Lesson 2.2: Rename, split, constrain. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the python command on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The files are in this kit: step-1/loop/tools.py (after step 1), loop/tools.py (the final file) and
+experiments/m2/prompt_override.py. Type them, or copy them into your harborline folder.
+
+1. One tool for everything
+   cd ~/projects/harborline
+   git status --short                       (prints nothing: a clean tree after Lesson 2.1)
+   code loop/tools.py                       add data to the import, the generic QUERY_BACKEND tool and its
+                                            query_backend() handler, add it to TOOLS and HANDLERS; save
+   code experiments/m2/prompt_override.py   type the file (Ctrl+J hides the terminal panel while you type), save
+   (optional) clear; python -m experiments.m2.prompt_override
+                                            one column, with query_backend in the tool set (not run on camera)
+
+2. Split it by purpose
+   code loop/tools.py                       drop data from the import, one boundary sentence at the end of
+                                            process_refund's description, replace the generic block with
+                                            CHECK_REFUND and check_refund(), swap the name in TOOLS and HANDLERS; save
+
+3. One line in the system prompt
+   clear; python -m experiments.m2.prompt_override "When a customer mentions shipping or delivery, call list_orders first." "If a customer asks about an order but has no order ID, use list_orders to find it."
+                                            three columns (no line, the keyword line, the same intent by
+                                            situation), 16 rows, three totals; about a minute
+   code loop/agent.py                       a look only: its system prompt says it can't issue refunds, while
+                                            it holds every tool in TOOLS; not changed in this lesson
+
+4. Commit
+   git status --short                       M loop/tools.py   ?? experiments/m2/prompt_override.py
+   git add loop/tools.py experiments/m2/prompt_override.py
+   git commit -m "Lesson 2.2: split a generic tool, test system-prompt lines"
+   git push                                 to origin, your own harborline
+
+Never print your key: no cat .env, no echo of ANTHROPIC_API_KEY. The scripts load it from .env and never show it.
