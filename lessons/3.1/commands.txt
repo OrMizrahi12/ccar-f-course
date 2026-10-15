@@ -1,0 +1,27 @@
+Lesson 3.1: The Claude Agent SDK from zero. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+Your ANTHROPIC_API_KEY must be in .env (Lessons 0.4 and 0.6). One run costs about $0.0006.
+
+1. Install the SDK
+   cd ~/projects/harborline
+   git status --short                       prints nothing: a clean tree after Lab 2
+   code loop/agent.py                       a look back at Lab 1's loop (read only)
+   code requirements.txt                    line 6: claude-agent-sdk==0.2.165, save
+   clear; pip install -r requirements.txt   Successfully installed claude-agent-sdk-0.2.165
+
+2. Your functions as tools
+   code support/tools.py                    type the file (or copy it from the kit), save
+
+3. Options and a first run
+   code support/hello_agent.py              type the file (or copy it from the kit), save
+   clear; python -m support.hello_agent T-008
+                                            tools: the two mcp__harborline__ tools only;
+                                            get_customer, then lookup_order HL-10196;
+                                            success: 3 turns, about $0.0006
+
+4. Commit
+   clear; git status --short                 M requirements.txt, ?? support/
+   git add requirements.txt support
+   git commit -m "Lesson 3.1: a first agent on the Claude Agent SDK, with in-process tools"
+   git push                                 to origin, your own harborline
