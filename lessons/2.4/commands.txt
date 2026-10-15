@@ -1,0 +1,36 @@
+Lesson 2.4: Structured error responses. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The files are in this kit: harborline/tool_errors.py, loop/tools.py (the final file) and
+experiments/m2/error_replies.py. Type them, or copy them into your harborline folder.
+
+1. Name the failure
+   cd ~/projects/harborline
+   git status --short                       (prints nothing: a clean tree after Lesson 2.3)
+   code harborline/errors.py                a look: one class per kind of failure, each with its kind
+   code loop/tools.py                       a look: Ctrl+G 174, run_tool's except branch sends str(error)
+   code harborline/tool_errors.py           type the new file (Ctrl+J hides the terminal panel while you type), save
+   code loop/tools.py                       add "from harborline.tool_errors import tool_error" under the
+                                            BackendError import; in run_tool's except branch, send
+                                            tool_error(error) as the content, still with "is_error": True; save
+   clear; pytest -q                         54 passed
+
+2. Same requests, three error replies
+   code experiments/m2/error_replies.py     type the file, save
+   clear; python -m experiments.m2.error_replies
+                                            5 cases x 3 styles x 3 tries, about a minute, prints only at the end
+
+3. Retry, explain, or an empty answer
+   code harborline/backend.py               a look: Ctrl+G 95, list_orders' docstring (an empty list is a valid answer)
+   clear; python -c "from harborline.backend import list_orders; print(list_orders('C-1058'))"
+                                            []
+   clear; python -m loop.agent T-040        the transient error on HL-10211, the same lookup again, the answer
+
+4. Commit
+   clear; git status --short                M loop/tools.py   ?? experiments/m2/error_replies.py
+                                            ?? harborline/tool_errors.py
+   git add harborline/tool_errors.py loop/tools.py experiments/m2/error_replies.py
+   git commit -m "Lesson 2.4: structured tool errors, error replies compared"
+   git push                                 to origin, your own harborline
+
+Never print your key: no cat .env, no echo of ANTHROPIC_API_KEY. The scripts load it from .env and never show it.
