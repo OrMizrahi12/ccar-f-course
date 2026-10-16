@@ -1,0 +1,57 @@
+Lesson 5.1: Working with Claude Code. Every prompt, key and command in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear" (see README.md). Claude Code's keys are the same everywhere.
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+The kit's scripts/late_deliveries.py and tests/test_late_deliveries.py are the files Claude wrote in the lesson: compare with yours.
+No API calls: Claude Code runs on your Claude sign-in.
+
+1. Explore and plan
+   cd ~/projects/harborline
+   git status --short                       (nothing: the tree is clean)
+   claude                                   status bar: auto mode on
+     Shift+Tab                              manual mode on
+     Shift+Tab                              accept edits on
+     Shift+Tab                              plan mode on
+     Which orders were delivered more than 5 days after the promised date, and what does our refund policy say we owe for them? Look at how the data and its dates are handled before you answer.
+                                            reads and Python checks (Allowed by auto mode classifier);
+                                            harborline - Lookup Order asks first: 1. Yes (once per order);
+                                            HL-10147 and HL-10148, 8 days late, $6.95 each, $13.90 in total
+     Plan a script, scripts/late_deliveries.py, that lists those orders with the shipping fee we owe and the total, plus a test for it. Keep the change to those two files.
+                                            the plan, then: 1. Yes, and use auto mode / 2. Yes, manually approve edits /
+                                            3. Tell Claude what to change
+     1                                      approve, in auto mode
+
+2. Code and test (Claude does this after the approval)
+                                            Write scripts/late_deliveries.py, Write tests/test_late_deliveries.py,
+                                            6 passed, the full suite, the summary ($13.90; 6 new tests; 118 in all)
+
+3. Context (the same session)
+     /context                               scroll up to the grid: tokens used of the window, by category
+     /compact Keep the late-delivery script, its test and the policy rule
+                                            Compacted; the working files re-read; the plan file referenced
+     /context                               the new grid: fewer tokens in Messages
+
+4. Commit, clear, resume (the same session)
+     Commit the script and its test with a descriptive message.
+                                            in the lesson: a new branch late-delivery-report, commit cf8ab59
+     /clear
+     What did I ask you to plan earlier in this conversation?
+                                            no record: the context is empty
+     /resume                                Enter on the newest session
+     What did I ask you to plan earlier in this conversation?
+                                            answered from the restored conversation
+     /exit
+   git log --oneline -1
+   git push                                 fatal: ... has no upstream branch (a new local branch)
+   clear
+   git switch main
+   git merge --ff-only late-delivery-report
+   git push
+   git branch -d late-delivery-report
+   git log --oneline -2                     your commit with (HEAD -> main, origin/main)
+   clear
+   claude --continue                        the most recent session, where it ended
+     /exit
+
+Optional: run the script and the tests yourself
+   python -m scripts.late_deliveries
+   python -m pytest -q
