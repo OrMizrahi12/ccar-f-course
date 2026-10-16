@@ -1,0 +1,21 @@
+Lesson 4.3: Parallel subagents, scope and refinement. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+Your ANTHROPIC_API_KEY must be in .env (Lessons 0.4 and 0.6). The run in step 2 costs about two cents.
+
+1. A goal, a split, and subagents that start together
+   cd ~/projects/harborline
+   git status --short                       prints nothing: a clean tree after Lesson 4.2
+   code research/coordinator.py             change it in place (see README.md, step 1), save
+
+2. One run, timed
+   clear; python -m research.coordinator "Should Harborline charge customers a fee for return shipping?" 2> runs/research.log
+                                            timestamped starts (->) and ends (<-) of each numbered subagent,
+                                            their tool calls, the answer, subagents: ...,
+                                            subagents worked ...s in ...s of clock time: running together saved ...s
+
+3. Commit
+   clear; git status --short                 M research/coordinator.py
+   git add research
+   git commit -m "Lesson 4.3: subagents split by scope and run together, and the answer checked against the goal"
+   git push                                 to origin, your own harborline
