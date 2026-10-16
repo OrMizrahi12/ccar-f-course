@@ -1,0 +1,61 @@
+Lesson 5.3: Rules and path-scoped conventions. Every command, prompt and key in the lesson, in order (macOS and Linux).
+Windows: see README.md for mkdir and the backslash paths in PowerShell (the globs inside the rule files keep forward slashes).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)), unless a line says otherwise.
+The kit's harborline/.claude/rules/ files are the files typed in the lesson. No API calls: Claude Code runs on your Claude sign-in.
+
+1. Two scoped rules
+   cd ~/projects/harborline
+   git status --short                       (nothing: the tree is clean)
+   mkdir -p .claude/rules
+   code .claude/rules/testing.md            a new, empty file
+     (Ctrl+J hides the terminal panel)
+     type:
+       ---
+       paths:
+         - "tests/**/*.py"
+       ---
+
+       # Tests
+
+       - Name each test for the behavior it checks.
+       - Build small order dicts inside the test. Never edit data/*.json for a test.
+       - Run the one test file first, then the whole suite.
+     Ctrl+S
+   (Ctrl+` back to the terminal)
+   code .claude/rules/tools.md              a new, empty file
+     (Ctrl+J)
+     type:
+       ---
+       paths:
+         - "loop/tools.py"
+         - "mcp_server/**"
+         - "support/tools.py"
+       ---
+
+       # Tool definitions
+
+       - A description says what the tool returns, and when to use it instead of a similar tool.
+       - Errors go through harborline/tool_errors.py: errorCategory, isRetryable and a message.
+     Ctrl+S
+   (Ctrl+`)
+   clear
+
+2. Watch them load (tools.md stays open in the editor)
+   claude                                   the prompt shows the chip "In tools.md"
+     Read harborline/costs.py. Then quote any rules from .claude/rules that you were given, or say there are none.
+                                            Read 1 file, listed 1 directory; no Loaded line; no rules given
+     Read tests/test_policy.py. Then quote any rules from .claude/rules that you were given, or say there are none.
+                                            Read 1 file / Loaded .claude/rules/testing.md; the three testing rules quoted
+     Read mcp_server/server.py. Then quote any rules from .claude/rules that you were given, or say there are none.
+                                            Loaded .claude/rules/tools.md; both tool rules quoted
+     (scroll up with the mouse wheel to compare the three reads, then back down)
+     /context                               scroll up to the grid: Memory files (295 tokens in the lesson)
+     /exit
+
+3. Commit and share
+   clear
+   git status --short                       ?? .claude/
+   git add .claude/rules
+   git commit -m "Lesson 5.3: path-scoped rules for tests and for tool definitions"
+                                            2 files changed, 21 insertions(+)
+   git push
