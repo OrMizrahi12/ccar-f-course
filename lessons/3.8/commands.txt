@@ -1,0 +1,33 @@
+Lesson 3.8: Sessions: resume, fork, or start fresh. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+Your ANTHROPIC_API_KEY must be in .env (Lessons 0.4 and 0.6). Each run is one short reviewer call (about a tenth of a cent).
+
+1. A named session
+   cd ~/projects/harborline
+   git status --short                       prints nothing: a clean tree after Lesson 3.7
+   code support/sessions.py                 type the file (or copy it from the kit), save
+   clear; python -m support.sessions new review "Read support/hooks.py. One line per hook: when it runs, and what it does." 2> runs/sessions.log
+                                            tools: Read hooks.py, three lines, session review: <an ID>
+
+2. Resume
+   clear; python -m support.sessions resume review "Which of these hooks protects money, and how?" 2> runs/sessions.log
+                                            tools: -  (the answer comes from the session), the same ID
+
+3. Fork
+   clear; python -m support.sessions fork review tests-direct "Plan three unit tests that call these hooks directly, without the agent. One line each." 2> runs/sessions.log
+   clear; python -m support.sessions fork review tests-agent "Plan three checks that run the whole agent instead. One line each." 2> runs/sessions.log
+   clear; python -m support.sessions resume review "Have we planned any tests in this conversation?" 2> runs/sessions.log
+                                            tools: - each time; two new IDs; the original says no tests were planned
+   cat runs/sessions.json                   three names, three session IDs
+
+4. Tell it what changed
+   code support/hooks.py                    line 20: amount = float(input_data["tool_input"].get("amount", 0)), save
+   clear; python -m support.sessions resume review "I changed one line in support/hooks.py: refund_limit now reads the amount with float(). Re-read only that function. Does a text amount like 600 still get past it?" 2> runs/sessions.log
+                                            tools: Read hooks.py (that one file), the same ID
+
+5. Commit
+   clear; git status --short                 M support/hooks.py, ?? support/sessions.py
+   git add support
+   git commit -m "Lesson 3.8: named sessions to resume and fork, and a refund amount read as a number"
+   git push                                 to origin, your own harborline
