@@ -1,0 +1,61 @@
+Lesson 5.2: The CLAUDE.md hierarchy. Every command, prompt and key in the lesson, in order (macOS and Linux).
+Windows: see README.md for the user-file path, mkdir, the teammate's folder (C:\teammate) and "&&" in Windows PowerShell 5.1.
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)), unless a line says otherwise.
+The kit's harborline/ files are the files typed in the lesson. No API calls: Claude Code runs on your Claude sign-in.
+
+1. The rules nobody else gets
+   cd ~/projects/harborline
+   git status --short                       (nothing: the tree is clean)
+   code ~/.claude/CLAUDE.md                 a new, empty file: your user file
+     (Ctrl+J hides the terminal panel)
+     type:
+       # My notes for Claude
+
+       - Run the tests with: .venv/bin/python -m pytest -q
+       - Money: take refund amounts from policy.check_refund, never compute them by hand.
+       - Dates: read orders through harborline.normalize, never parse the raw date fields.
+       - Commit messages: one line that says what changed.
+       - Keep answers short.
+     Ctrl+S
+   (Ctrl+` back to the terminal)
+   clear
+   claude -p "Without reading any files: quote the rules you were given for working in this repository, or say there are none. Nothing else."
+                                            quoted from your global notes (~/.claude/CLAUDE.md): the five lines
+
+2. A project CLAUDE.md with imports
+   clear
+   code CLAUDE.md                           type the kit's harborline/CLAUDE.md (14 lines), Ctrl+S
+   mkdir -p docs/conventions
+   code docs/conventions/money.md           type the kit's money.md, Ctrl+S
+   code docs/conventions/dates.md           type the kit's dates.md, Ctrl+S
+
+3. A folder's own rules
+   code support/CLAUDE.md                   type the kit's support/CLAUDE.md, Ctrl+S
+   code ~/.claude/CLAUDE.md                 Ctrl+G 3 Enter, Ctrl+L x4 (lines 3-6), Delete, Ctrl+S
+                                            left: "# My notes for Claude" and "- Keep answers short."
+
+4. Check and share
+   (once, off camera in the lesson: a teammate's fresh clone, outside your home folder)
+   git clone <your harborline repository URL> /tmp/teammate
+   clear
+   cd /tmp/teammate && git pull -q && claude -p --setting-sources project,local "Without reading any files: quote the rules you were given for working in this repository, or say there are none. Nothing else."
+                                            I wasn't given any rules specific to this repository. ...
+   cd ~/projects/harborline
+   clear
+   claude
+     /memory                                User instructions, Project instructions, money.md and dates.md @-imported
+     Esc
+     /context                               scroll to the top: Memory files (295 tokens in the lesson)
+     Read support/agent.py and tell me in two lines what it does.
+                                            Read 1 file / Loaded support/CLAUDE.md / the two-line answer
+     (scroll up to the earlier /context report: the Memory files list, without support/CLAUDE.md)
+     /exit
+   clear
+   git add CLAUDE.md docs support/CLAUDE.md
+   git commit -m "Lesson 5.2: team rules in CLAUDE.md with imports, and support/CLAUDE.md for the support agent"
+                                            4 files changed, 26 insertions(+)
+   git push
+   clear
+   cd /tmp/teammate && git pull -q && claude -p --setting-sources project,local "Without reading any files: quote the rules you were given for working in this repository, or say there are none. Nothing else."
+                                            CLAUDE.md, money.md and dates.md quoted word for word
+   cd ~/projects/harborline
