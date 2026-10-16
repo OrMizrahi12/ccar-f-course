@@ -1,0 +1,24 @@
+Lesson 4.2: Subagents in the Agent SDK. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+Your ANTHROPIC_API_KEY must be in .env (Lessons 0.4 and 0.6). The run in step 3 costs about one and a half cents.
+
+1. Three definitions
+   cd ~/projects/harborline
+   git status --short                       prints nothing: a clean tree after Lesson 4.1
+   code research/agents.py                  type the file (or copy it from the kit), save
+
+2. The coordinator uses them
+   code research/coordinator.py             change it in place (see README.md, step 2), save
+
+3. Findings handed over whole
+   clear; python -m research.coordinator "Should Harborline charge customers a fee for return shipping?" 2> runs/research.log
+                                            coordinator tools: Task, ...; the searcher, the analyst and the synthesizer,
+                                            each with the prompt it gets; [ N findings as JSON, keys: ... ]; the answer;
+                                            subagents: searcher, analyst, synthesizer
+
+4. Commit
+   clear; git status --short                 M research/coordinator.py, ?? research/agents.py
+   git add research
+   git commit -m "Lesson 4.2: subagent definitions in one file, and findings handed over as JSON"
+   git push                                 to origin, your own harborline
