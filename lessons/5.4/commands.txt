@@ -1,0 +1,33 @@
+# Lesson 5.4: Slash commands and skills. Every command, file and prompt in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 5.3 commit, with (.venv) active.
+
+# --- Step 1: a project command ---
+git status --short
+mkdir -p .claude/commands .claude/skills/review-tool-descriptions
+code .claude/commands/run-tests.md
+# Type the file (or copy harborline/.claude/commands/run-tests.md from this kit), then save (Ctrl+S).
+
+# --- Step 2: a forked skill ---
+code .claude/skills/review-tool-descriptions/SKILL.md
+# Type the file (or copy harborline/.claude/skills/review-tool-descriptions/SKILL.md from this kit), then save.
+
+# --- Step 3: a personal variant (in your home folder, not in the repo) ---
+mkdir -p ~/.claude/skills/my-tool-review
+code ~/.claude/skills/my-tool-review/SKILL.md
+# Type the file (or copy user-level/skills/my-tool-review/SKILL.md from this kit), then save.
+clear
+
+# --- Step 4: run them and share ---
+claude
+# In Claude Code, type (don't press Enter) to see the menu, then delete it with Backspace:
+/rev
+# Run the command, then the skill:
+/run-tests tests/test_policy.py
+/review-tool-descriptions loop/tools.py
+/exit
+
+clear
+git status --short
+git add .claude/commands .claude/skills
+git commit -m "Lesson 5.4: a /run-tests command and a forked review-tool-descriptions skill"
+git push
