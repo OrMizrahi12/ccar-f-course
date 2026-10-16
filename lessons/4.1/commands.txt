@@ -1,0 +1,33 @@
+Lesson 4.1: Coordinators and subagents. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+Your ANTHROPIC_API_KEY must be in .env (Lessons 0.4 and 0.6). The broad question costs about half a cent; the narrow ones less.
+
+1. The research tools
+   cd ~/projects/harborline
+   git status --short                       prints nothing: a clean tree after Lab 3
+   mkdir research
+   code research/tools.py                   type the file (or copy it from the kit), save
+   clear; python -m research.tools "return fee"
+                                            five hits (date, publisher, URL); no API call
+
+2. The coordinator
+   code research/coordinator.py             type the file (or copy it from the kit), save
+
+3. One question, two subagents
+   clear; python -m research.coordinator "Should Harborline charge customers a fee for return shipping?" 2> runs/research.log
+                                            -> searcher gets only this prompt: ... searches
+                                            -> analyst gets only this prompt: ... URLs, fetches
+                                            the answer, citing URLs; subagents: searcher, analyst
+
+4. Only what the question needs
+   clear; python -m research.coordinator "What return rate does https://meridian-institute.example/reports/returns-benchmark-2025 report?" 2> runs/research.log
+                                            analyst only: one fetch, 17.6%; subagents: analyst
+   clear; python -m research.coordinator "Which sources cover return fraud? Just list them." 2> runs/research.log
+                                            searcher only: searches, a list; subagents: searcher
+
+5. Commit
+   clear; git status --short                ?? research/
+   git add research
+   git commit -m "Lesson 4.1: a research coordinator with two subagents"
+   git push                                 to origin, your own harborline
