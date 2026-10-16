@@ -1,0 +1,32 @@
+Lesson 4.6: Errors across agents. Every command typed in the lesson, in order (macOS and Linux).
+Windows: in cmd.exe use "cls" instead of "clear", and run the command after it on its own line (see README.md).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)).
+Your ANTHROPIC_API_KEY must be in .env (Lessons 0.4 and 0.6). The run in step 4 costs about two cents; the tests cost nothing.
+
+1. A timeout with context
+   cd ~/projects/harborline
+   git status --short                       prints nothing: a clean tree after Lesson 4.5
+   code research/tools.py                   change it in place (see README.md, step 1), save
+
+2. Recover, report, carry on
+   code research/agents.py                  the searcher's and the synthesizer's prompts (README.md, step 2), save
+   code research/coordinator.py             docstring, import json, the prompt, failure(), calls, the "!" line, save
+
+3. Failure versus empty, tested
+   code tests/test_research_tools.py        import asyncio and the two new tests, save
+   clear; python -m pytest -q tests/test_research_tools.py
+                                            6 passed
+   python -m pytest -q                      the whole suite: 100 passed
+
+4. One run
+   clear; python -m research.coordinator "Should Harborline charge customers a fee for return shipping, and would a fee cut return fraud?" 2> runs/research.log
+                                            "!" lines for the searches that timed out, the retries,
+                                            the answer with its gap line, subagents: ...,
+                                            subagents worked ...s in ...s of clock time: running together saved ...s
+
+5. Commit
+   clear; git status --short                 M research/agents.py, research/coordinator.py, research/tools.py,
+                                            tests/test_research_tools.py
+   git add research tests
+   git commit -m "Lesson 4.6: a timeout that says what failed and what came back, recovery in the searcher, and the gap in the answer"
+   git push                                 to origin, your own harborline
