@@ -1,0 +1,31 @@
+# Lesson 7.6: Human review and confidence calibration. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 7.5 commit, with (.venv) active.
+# Needs runs/batch.jsonl from Lesson 7.5's batch (runs/ is not in git). No API calls in this lesson ($0).
+
+# --- Step 1: measure by slice ---
+git status --short
+wc -l runs/batch.jsonl
+code extraction/review.py
+# Type review.py (harborline/extraction/review.py in this kit): FIELDS, TARGET = 0.95, SAMPLE = 2; compare(), accuracy();
+# main(): overall, by layout, by field, the confidence table (layout x field), below target, the queue (flagged / low
+# confidence / trusted), SAMPLE random trusted records per layout, runs/review_queue.jsonl, the counts, the wrong values
+# among the trusted. Save (Ctrl+S).
+
+# --- Step 2: route by confidence ---
+clear
+python -m extraction.review
+
+# --- Step 3: sample what you trust ---
+clear
+head -5 runs/review_queue.jsonl
+grep sample runs/review_queue.jsonl
+clear
+python -m extraction.review | tail -6
+grep sample runs/review_queue.jsonl
+
+# --- Commit and push ---
+clear
+git status --short
+git add extraction
+git commit -m "Lesson 7.6: accuracy by layout and field, routing by measured confidence, random samples"
+git push
