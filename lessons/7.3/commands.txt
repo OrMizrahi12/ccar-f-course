@@ -1,0 +1,35 @@
+# Lesson 7.3: Validate, retry, self-correct. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 7.2 commit, with (.venv) active.
+# validate.py loads your Anthropic API key from .env (Lesson 0.4). Keep the model in harborline/config.py at claude-haiku-5-5.
+# Four runs, about a dozen calls in all: under a cent.
+
+# --- Step 1: checks and a retry ---
+git status --short
+code extraction/extract.py
+# call() takes a note, appended after the document: def call(client, text, tool, note=""): ... </document>{note}. Save (Ctrl+S).
+code extraction/validate.py
+# Type validate.py (harborline/extraction/validate.py in this kit): RETRY, Checked (iso_date, lines_add_up), problems(),
+# totals(), extract_checked() with three attempts and the review statuses, and the printout at the bottom. Save.
+
+# --- Step 2: fixed, capped, hopeless ---
+clear
+python -m extraction.validate data/invoices/dev/INV-D08.txt
+clear
+python -m extraction.validate data/invoices/dev/INV-D07.txt
+clear
+cat data/invoices/dev/INV-D11.txt
+clear
+python -m extraction.validate data/invoices/dev/INV-D11.txt
+
+# --- Step 3: a document that disagrees with itself ---
+clear
+cat data/invoices/batch/INV-0048.txt
+clear
+python -m extraction.validate data/invoices/batch/INV-0048.txt
+
+# --- Commit and push ---
+clear
+git status --short
+git add extraction
+git commit -m "Lesson 7.3: validation with Pydantic, retries with the exact errors, calculated and stated totals"
+git push
