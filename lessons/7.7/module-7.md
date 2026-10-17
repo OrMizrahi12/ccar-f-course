@@ -1,0 +1,31 @@
+# Module 7 on one page: Structured Data Extraction
+
+CCAR-F · Domain 4, Prompt Engineering & Structured Output (20%), and Domain 5, Context Management & Reliability (15%) · Task Statements 4.2, 4.3, 4.4, 4.5 and 5.5 · Scenario 6 (Structured Data Extraction) · checked against the Claude docs on 2026-10-17 · ⚑ marks a detail that is true today and may change
+
+**The one question:** what makes this value trustworthy, and who finds out when it isn't? Not a stronger word in the prompt, but a mechanism: a forced tool, a field that can say "not stated", a validator, a retry with the errors, an example, a `custom_id`, a resubmitted failure, a measured slice.
+
+| Lesson | Keep this |
+|---|---|
+| 7.1 Structured output with tool use | Make the record a tool's input schema and read it from the `tool_use` block. `tool_choice` `auto` lets Claude answer in text; `any` forces some tool; a named tool forces that one (the API prefills the assistant message, so no text comes first ⚑). When documents differ, classify first with a forced metadata call, then extract with the right tool. `strict: true` guarantees the shape (valid JSON, required fields, types), never the values. Our runs: the pro-forma came back as an invoice under `any`; metadata first skipped it as `other`; under strict, a gross read as quantity 1, valid and wrong. |
+| 7.2 Schemas that don't invite fabrication | A required field the source doesn't state gets invented. Make it nullable and say null when it isn't stated; add `other` (with a detail field) and `unclear` to enums; put the format rules (amounts, currency codes, dates) in the prompt next to the schema. Required is right for what every document states. Our runs: `"<UNKNOWN>"` and `-1` with every field required; `null` once the fields were nullable. |
+| 7.3 Validate, retry, self-correct | Validators in code for what the schema can't say: quantity x unit price = amount, the lines against the subtotal, a calculated total kept next to the stated one, `conflict_detected`. Retry with the document, the failed output and the exact errors, up to a cap, then a person. Format and reading mistakes are retryable; a value the document doesn't contain isn't. Our runs: fixed on attempt 2; the same reading 3 times, to review; no total stated, to review without a retry. |
+| 7.4 Few-shot for messy documents | When rules leave measured failures, show it: a few examples, one per layout (table, prose, email, scan) and a plain case, each with the exact output and the wrong reading it replaces, wrapped in example tags. Relevant, diverse, structured. Measure on a labeled dev set before and after. Our runs: 9 of 12 exact, 7 wrong values; then 12 of 12, 0 wrong values. |
+| 7.5 Batch processing at scale | The Message Batches API: half the price ⚑, most batches in under an hour, up to 24 hours, no promise of order. Batch only the work nobody waits on; never a pre-merge check. Match every result by `custom_id`. Plan the deadline on the 24: wait + 24 hours ≤ the SLA (36 hours → a batch every 8 hours). Resubmit only the failures, each with its fix: a long document in parts, a failed check with its errors, an expired request as it was. Our runs: 100 → 94 → 38 requests; two invoices joined from parts; $0.0486. |
+| 7.6 Human review and confidence calibration | An overall number hides a weak layout or field. Measure accuracy by document type and field on a labeled set; route by that measured confidence and by conflicts (not by the model's own rating); keep sampling trusted records at random, from every type, every run. Our runs: 98.8% overall, `supplier_name` 61.7%; 42 records to a person; 4 random samples, different each run. |
+
+## The eight traps
+
+| Trap | It sounds like | Why it's wrong, and the fix |
+|---|---|---|
+| Ask for JSON | "Reply in JSON." "Parse the reply with a regex." "tool_choice auto, and hope." | Prose changes shape; with `auto`, Claude may answer in text. A tool's input schema and a forced call (`any` or by name); classify first. |
+| Fill every field | "Make every field required." "Default the missing values to 0." | A required field the document lacks gets invented. Nullable fields; `other` + detail and `unclear`; required for what every document states. |
+| Strict means right | "Strict mode checks the output, so the values are correct." | Strict guarantees the shape, not that the lines add up. Validators in code; a calculated total next to the stated one. |
+| Retry until it works | "Raise the retry limit." "Higher temperature." "Retry until the total appears." | A bare retry repeats the reading; a missing value can only be invented. Retry with the errors, capped, then a person; never retry what isn't there. |
+| More rules | "Add the rule in capital letters." "List every informal quantity." | Rules describe the format; the measured failures stay. Examples per layout with the exact output; re-run the dev set and count. |
+| Batch the blocking work | "Batch the pre-merge check." "Results come back in order." "One batch a day, 36-hour deadline." | Up to 24 hours, no promise of order. Only work nobody waits on; match by `custom_id`; submit often enough for the deadline. |
+| Resubmit everything | "Re-run the whole batch." "Raise max_tokens everywhere." "Drop the failures." | Pays twice and hides why. Only the failed `custom_id`s, each with its fix. |
+| Trust the average | "97% overall, skip review." "Review only what the model calls unsure." "Spot-check the first 20." | An average hides a weak slice; a self-rating isn't evidence. Accuracy by layout and field, routing by measured confidence, random samples every run. |
+
+Each of these moves is right somewhere: `auto` when a tool is optional, required fields for what every document states, a retry for a reading mistake, rules for the format, the Message Batches API for work nobody waits on, overall accuracy as a headline. It's wrong when it replaces what the question asks for.
+
+Sources: platform.claude.com/docs (Define tools, Strict tool use, Reduce hallucinations, Handle tool calls, Prompting best practices, Batch processing, Define success criteria and build evaluations) and the CCAR-F exam guide. Models and tools change: confirm details in the official docs.
