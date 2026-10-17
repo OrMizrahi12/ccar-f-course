@@ -1,0 +1,32 @@
+# Lesson 7.5: Batch processing at scale. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 7.4 commit, with (.venv) active.
+# The scripts load your Anthropic API key from .env (Lesson 0.4). Keep the model in harborline/config.py at claude-haiku-5-5.
+# Three batches over 100 documents: about $0.05 at batch prices in the lesson, and 15 minutes of waiting (it varies).
+
+# --- Step 1: one request, two ways ---
+git status --short
+code extraction/extract.py
+# Add request(text, tool, note=""): returns the parameters of one forced call (model, max_tokens, tools, tool_choice, messages).
+# call() sends client.messages.create(**request(text, tool, note)). Save (Ctrl+S).
+code extraction/validate.py
+# Add finish(record): the calculated total, conflict_detected and the status, out of extract_checked(); extract_checked()
+# returns meta | finish(record). Save.
+
+# --- Step 2: batch, match, resubmit ---
+code extraction/batch.py
+# Type batch.py (harborline/extraction/batch.py in this kit): the SLA docstring (36 hours, a batch every 8), run(),
+# tool_input(), parts(), check(), main(): batch one classifies, batch two records, only the failed custom_ids go out again
+# with their fix (errors / parts / as it was), parts are joined, runs/batch.jsonl and the cost. Save.
+
+# --- Step 3: a hundred documents ---
+clear
+ls data/invoices/batch | wc -l
+python -m extraction.batch data/invoices/batch
+grep INV-0008 runs/batch.jsonl | python -m json.tool | tail -14
+
+# --- Commit and push ---
+clear
+git status --short
+git add extraction
+git commit -m "Lesson 7.5: the batch folder through the Message Batches API, resubmitting only what failed"
+git push
