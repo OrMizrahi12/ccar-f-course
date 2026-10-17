@@ -1,0 +1,28 @@
+# Lesson 8.5: Exam strategy. Every command in the hands-on, in order (Ubuntu / macOS terminal; Windows: see README.md).
+# Before you start: ccar-f-exam-guide.pdf in ~/Downloads (Lesson 0.1) and this course's cheat sheets
+# (course materials, cheatsheets/module-1.md to module-7.md) in ~/Downloads/ccar-f-cheatsheets/.
+
+cd ~/projects
+mkdir exam-plan && cd exam-plan
+cp ~/Downloads/ccar-f-exam-guide.pdf . && cp -r ~/Downloads/ccar-f-cheatsheets .
+ls *
+
+claude
+# Folder trust: the default is "No, exit". Press Down, then Enter ("Yes, I trust this folder").
+# Shift+Tab twice: "accept edits on" (Claude Code can write the file without asking).
+# Paste the prompt from prompt.txt, press Enter, and wait for the summary.
+/exit
+
+code exam-plan.md
+# Ctrl+J hides the terminal panel; Ctrl+Shift+V (macOS: Cmd+Shift+V) opens the Markdown preview.
+
+# Check 1, the counts: section 4 of the guide gives each domain's weight; weight x 60 (27% x 60 = 16.2, so about 16).
+# Check 2, the pacing: 115 minutes / 60 = about 1 min 55 s; 15 x 1.9167 = 28.75, so question 15 by minute 29.
+# Check 3, one mapping against a cheat sheet (Ctrl+J shows the terminal again):
+clear
+head -3 ccar-f-cheatsheets/module-5.md
+grep -c 'L5.6' exam-plan.md
+# 0 in the lesson: Lesson 5.6 (Task 3.5, iterative refinement) was missing. The fix matches the lesson's wording;
+# yours will differ, so adapt the pattern or add the lesson by hand in the editor (macOS: sed -i '' ...).
+sed -i 's/plan vs direct)/plan vs direct), L5.6 (iterative refinement)/' exam-plan.md
+grep -c 'L5.6' exam-plan.md

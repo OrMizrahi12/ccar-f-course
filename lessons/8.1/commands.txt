@@ -1,0 +1,31 @@
+# Lesson 8.1: Capstone tour. Every command in the hands-on, in order (Ubuntu / macOS terminal; Windows: see README.md).
+# Before you start: your own harborline repository after Lesson 7.6, in ~/projects/harborline, with its .venv.
+
+cd ~/projects/harborline
+source .venv/bin/activate          # Windows (PowerShell): .venv\Scripts\Activate.ps1
+
+# Step 1, the history
+git log --oneline | wc -l          # how many commits (57 in the lesson; yours will differ)
+git log --oneline --reverse | head -16    # the oldest first: the starter, then Lesson 1.1, 1.2, ...
+git log --oneline | head -16       # the newest: Module 7, Module 6, Lab 5
+git tag                            # starter-v1 (Lesson 0.6)
+ls .claude/rules .claude/commands .claude/skills   # the team setup from Module 5
+
+# Step 2, one stop per system (code -g opens a file at a line; Ctrl+J hides or shows the terminal panel)
+code -g loop/agent.py:84                     # Module 1, the raw loop: one branch per stop reason
+code -g mcp_server/server.py:44              # Module 2, harborline-mcp: each tool and its description
+code -g support/hooks.py:14                  # Module 3, Scenario 1: the refund-limit hook
+code -g research/agents.py                   # Module 4, Scenario 3: the subagent definitions
+code -g CLAUDE.md                            # Module 5, Scenario 2: the project's CLAUDE.md
+code -g devtools/explorer.py                 # Lesson 5.8, Scenario 4: the codebase explorer
+code -g .github/workflows/pr-review.yml      # Module 6, Scenario 5: the review on every pull request
+code -g extraction/schema.py                 # Module 7, Scenario 6: None, never a guess
+# Close the editor tabs (Ctrl+K, then Ctrl+W) and show the terminal again (Ctrl+J).
+
+# Step 3, three runs
+clear
+python -m pytest -q                                            # the whole suite; no API calls
+python -m support.agent T-003                                  # one ticket (one Haiku conversation, about a tenth of a cent)
+python -m extraction.validate data/invoices/dev/INV-D08.txt    # one invoice (one or two Haiku calls)
+python -m extraction.review | head -14                         # last month's batch from Lesson 7.5; no API calls
+git status --short                                             # nothing to commit: the runs write only to runs/, which git ignores
