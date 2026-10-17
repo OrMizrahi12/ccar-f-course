@@ -1,0 +1,26 @@
+# Lesson 5.7: Exploring a large codebase. Every command and prompt in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 5.6 commit, with (.venv) active.
+
+# --- Step 1: phase 1, three Explore subagents ---
+git status --short
+claude
+# In Claude Code, the phase 1 prompt (one line):
+Phase 1: map how a refund request travels through this repo. Send one Explore subagent each to support/, mcp_server/ and loop/ with that question, and wait for all three. Then write what they found to notes/exploration.md: the files and functions on the path, and a list of open questions. Keep it under 40 lines.
+
+# --- Step 2: the scratchpad ---
+# Read the answer and the open questions. Scroll up to the Write line: it says how many lines the file really has.
+
+# --- Step 3: compact, with a focus ---
+/compact Keep the phase 1 summary; the details are in notes/exploration.md
+
+# --- Step 4: phase 2, from the file ---
+Phase 2: read notes/exploration.md first. Then send one Explore subagent to answer its first open question, wait for it, and add the answer under that question in the file.
+/exit
+
+# --- The notes file, then share it ---
+clear
+code notes/exploration.md
+clear
+git add notes/exploration.md
+git commit -m "Lesson 5.7: notes/exploration.md, the refund path mapped in two phases"
+git push
