@@ -1,0 +1,63 @@
+# Lesson 6.6: Test generation that adds value. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 6.5 commit, with (.venv) active.
+# ci/testgen.py and each local review run Claude Code headless on your Anthropic API key from .env (Lesson 0.4):
+# about $0.004-0.015 per run in the lesson, about $0.035 in all.
+# The first review uses the first commit of the teammate's late-refunds branch (Lesson 6.1). Find its hash once:
+#   git log --oneline --reverse main..origin/late-refunds | head -1
+# and use it wherever the lesson shows b065274 (your hash will differ).
+
+# --- The starting point ---
+git status --short
+grep -l normalize tests/*.py
+
+# --- Step 1: standards and a generator ---
+code CLAUDE.md
+# Below ## Conventions, add the ## Testing section (5 lines; harborline/CLAUDE.md in this kit is the result), then save (Ctrl+S).
+code ci/testgen.py
+# Type the generator (56 lines; harborline/ci/testgen.py in this kit), then save.
+
+# --- Step 2: five new tests ---
+clear
+set -a; source .env; set +a
+clear
+python ci/testgen.py harborline/normalize.py
+code tests/test_normalize_generated.py
+# Read the generated tests (yours will differ), then back to the terminal (Ctrl+`).
+clear
+python -m pytest -q
+
+# --- Step 3: what developers dismiss ---
+clear
+code ci/findings.schema.json
+# Add "detected_pattern": {"type": "string"}, to the properties, and "detected_pattern" to required, then save.
+code ci/review.py
+# Three changes, from the bottom of the file up: log(result["findings"]) in local(), the log() function,
+# and the detected_pattern line in PROMPT (harborline/ci/review.py in this kit), then save.
+code ci/review_log.py
+# Type the review log tool (38 lines; harborline/ci/review_log.py in this kit), then save.
+clear
+set -a; source .env; set +a
+clear
+python ci/review.py --local main...<your late-refunds commit>
+clear
+python ci/review.py --local main...origin/refund-totals
+clear
+python ci/review.py --local main...origin/weekly-fees
+clear
+python ci/review_log.py
+
+# --- As the developer: dismiss a finding, then the report ---
+clear
+python ci/review_log.py
+python ci/review_log.py dismiss 4
+python ci/review_log.py
+python ci/review_log.py report
+# Your numbering may differ: dismiss the finding you judge wrong, by its number in your list.
+
+# --- Commit and push ---
+clear
+git status --short
+git add CLAUDE.md ci tests/test_normalize_generated.py
+git commit -m "Lesson 6.6: test generation with existing tests as context, and detected_pattern for dismissals"
+git push
+# runs/ is in .gitignore, so runs/review_log.jsonl stays on your machine.
