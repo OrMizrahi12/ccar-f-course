@@ -1,0 +1,37 @@
+# Lesson 6.4: Few-shot for consistent output. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 6.3 commit, with (.venv) active.
+# Each local review runs Claude Code headless on your Anthropic API key from .env (Lesson 0.4): about $0.002-0.007 per run in the lesson.
+# The test diff is the first commit of the teammate's late-refunds branch (Lesson 6.1). Find its hash once:
+#   git log --oneline --reverse main..origin/late-refunds | head -1
+# and use it wherever the lesson shows b065274 (your hash will differ).
+
+# --- The starting point ---
+git status --short
+set -a; source .env; set +a
+git log --oneline -1 <your late-refunds commit>
+
+# --- Step 1: measure the drift (Lesson 6.3's criteria, run twice) ---
+clear
+python ci/review.py --local main...<your late-refunds commit>
+clear
+python ci/review.py --local main...<your late-refunds commit>
+
+# --- Step 2: add four examples ---
+code ci/prompts/review.md
+# Below the criteria, add the rule line, the format line and the four examples
+# (harborline/ci/prompts/review.md in this kit is the result: its last 18 lines), then save (Ctrl+S).
+
+# --- Step 3: same diff, same findings? (run it twice), then a diff the examples have never seen ---
+clear
+python ci/review.py --local main...<your late-refunds commit>
+clear
+python ci/review.py --local main...<your late-refunds commit>
+clear
+python ci/review.py --local main...origin/refund-totals
+
+# --- Commit and push ---
+clear
+git status --short
+git add ci/prompts/review.md
+git commit -m "Lesson 6.4: few-shot examples for one finding per root cause and a fixed format"
+git push
