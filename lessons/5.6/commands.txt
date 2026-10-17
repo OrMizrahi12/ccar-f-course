@@ -1,0 +1,24 @@
+# Lesson 5.6: Iterative refinement. Every command and prompt in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 5.5 commit, with (.venv) active.
+
+# --- Step 1: the interview ---
+git status --short
+claude
+# In Claude Code, send:
+Some new orders come from a marketplace partner whose dates look like 10/08/2026 2:30 PM ET. I want harborline/normalize.py to handle them. Before you write anything, interview me: ask the questions you need answered, all in one message.
+
+# --- Step 2: examples and failing tests (one message: these answers interact) ---
+Always month/day. ET means America/New_York, so daylight saving applies. Only this shape, and a date can come with no time. Any of the three date fields. Raise a ValueError that shows the value when it does not parse. Detect it from the string. Keep the UTC output ending in Z. Three examples: 10/08/2026 2:30 PM ET gives 2026-10-08T18:30:00Z; 01/02/2026 9:05 AM ET gives 2026-01-02T14:05:00Z; 10/08/2026 gives 2026-10-08. Write the tests first, in tests/test_partner_dates.py, run them and show me they fail. Do not change normalize.py yet.
+
+# --- Step 3: make them pass ---
+Now change normalize.py so these tests pass, then run the whole suite.
+
+# --- Step 4: one more example (independent, so on its own), then commit ---
+One more example for the tests: 10/08/2026 12:00 AM ET gives 2026-10-08T04:00:00Z. Add it and run the test file.
+/exit
+
+clear
+git status --short
+git add harborline/normalize.py tests/test_partner_dates.py
+git commit -m "Lesson 5.6: partner dates in normalize.py, test-first from three examples"
+git push
