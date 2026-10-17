@@ -1,0 +1,56 @@
+# Lesson 6.3: Explicit criteria beat "be conservative". Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 6.2 commit, with (.venv) active.
+# Each local review runs Claude Code headless on your Anthropic API key from .env (Lesson 0.4): about $0.002-0.004 per run in the lesson.
+
+# --- Before you start (once, off camera in the lesson): a teammate's branch to review ---
+# The lesson reviews a branch called refund-totals with one new file, scripts/refund_totals.py (it's in this kit).
+git switch -c refund-totals
+cp <kit>/harborline/scripts/refund_totals.py scripts/refund_totals.py
+git add scripts/refund_totals.py
+git commit -m "Refund totals per customer for the weekly report"
+git push -u origin refund-totals
+git switch main
+
+# --- The teammate's branch ---
+git status --short
+set -a; source .env; set +a
+git fetch -q && git log --oneline main..origin/refund-totals
+git --no-pager diff main...origin/refund-totals
+
+# --- Step 1: criteria in a file ---
+clear
+mkdir -p ci/prompts
+code ci/prompts/review.md
+# Type the vague version (review-v1.md in this kit), then save (Ctrl+S).
+code ci/review_config.json
+# Type {"disabled_categories": []} on three lines, then save.
+code ci/review.py
+# Make the edits (ci/review.py in this kit is the result): CRITERIA and CONFIG load at the top; the prompt starts with
+# CRITERIA; review() drops disabled categories; main() reads result["findings"]; a --local mode; the docstring line. Save.
+
+# --- Step 2: measure the vague version (run it twice) ---
+clear
+python ci/review.py --local main...origin/refund-totals
+clear
+python ci/review.py --local main...origin/refund-totals
+
+# --- Step 3: switch off a noisy category ---
+code ci/review_config.json
+# Change it to {"disabled_categories": ["style"]}, then save.
+clear
+python ci/review.py --local main...origin/refund-totals
+
+# --- Step 4: explicit criteria (run it twice) ---
+code ci/prompts/review.md
+# Replace the whole file with the explicit version (ci/prompts/review.md in this kit), then save.
+clear
+python ci/review.py --local main...origin/refund-totals
+clear
+python ci/review.py --local main...origin/refund-totals
+
+# --- Commit and push ---
+clear
+git status --short
+git add ci
+git commit -m "Lesson 6.3: explicit review criteria in ci/prompts/review.md, and a switch for noisy categories"
+git push
