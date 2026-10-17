@@ -1,0 +1,30 @@
+# Lesson 7.4: Few-shot for messy documents. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 7.3 commit, with (.venv) active.
+# dev_check.py loads your Anthropic API key from .env (Lesson 0.4). Keep the model in harborline/config.py at claude-haiku-5-5.
+# Two runs of the twelve dev documents, about thirty calls in all: a few cents at most.
+
+# --- Step 1: measure ---
+git status --short
+code extraction/dev_check.py
+# Type dev_check.py (harborline/extraction/dev_check.py in this kit): FIELDS, same(), differences(), main(). Save (Ctrl+S).
+clear
+python -m extraction.dev_check
+
+# --- Step 2: five examples ---
+mkdir extraction/prompts
+code extraction/prompts/examples.md
+# Type the five examples (harborline/extraction/prompts/examples.md in this kit). Save.
+code extraction/extract.py
+# Under RULES: EXAMPLES = (Path(__file__).parent / "prompts" / "examples.md").read_text()
+# In call(), the message becomes f"{RULES}\n{EXAMPLES}\n<document>\n{text}\n</document>{note}". Save.
+
+# --- Step 3: the same twelve documents again ---
+clear
+python -m extraction.dev_check
+
+# --- Commit and push ---
+clear
+git status --short
+git add extraction
+git commit -m "Lesson 7.4: few-shot examples for messy documents, and a dev-set check against the labels"
+git push
