@@ -1,0 +1,43 @@
+# Lesson 6.5: Independent and multi-pass review. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 6.4 commit, with (.venv) active.
+# The multi-pass review runs Claude Code headless four times on your Anthropic API key from .env (Lesson 0.4):
+# 28 turns and $0.0244 in the lesson.
+
+# --- Before you start (once): the teammate's weekly-fees branch, from this kit's copies ---
+# Replace <kit> with the folder where you unpacked this kit.
+git switch -c weekly-fees
+cp <kit>/harborline/harborline/fees.py harborline/fees.py
+cp <kit>/harborline/scripts/weekly_fees.py scripts/weekly_fees.py
+git add harborline/fees.py scripts/weekly_fees.py
+git commit -m "Weekly report of shipping fees owed, per customer"
+git push -u origin weekly-fees
+git switch main
+
+# --- Step 1: passes and a checker ---
+git status --short
+code ci/review.py
+# Edit from the bottom up (harborline/ci/review.py in this kit is the result): the local print (found by, verdict,
+# confidence, passes); routing in post() (inline_confidence); review() (a pass per file, a cross-file pass, the check);
+# files() and claude(prompt, text, schema); the CROSS, VERIFY and CHECK prompts. Save (Ctrl+S).
+code ci/verify.schema.json
+# Type the schema (harborline/ci/verify.schema.json in this kit), then save.
+code ci/review_config.json
+# Add  "inline_confidence": 0.8  after disabled_categories (mind the comma), then save.
+
+# --- Step 2: the bug, for real ---
+clear
+set -a; source .env; set +a
+git fetch -q && git log --oneline main..origin/weekly-fees
+git --no-pager diff main...origin/weekly-fees --stat
+git switch -q --detach origin/weekly-fees && python -m scripts.weekly_fees; git switch -q main
+
+# --- Step 3: multi-pass review (about two minutes; it prints at the end) ---
+clear
+python ci/review.py --local main...origin/weekly-fees
+
+# --- Commit and push ---
+clear
+git status --short
+git add ci
+git commit -m "Lesson 6.5: a pass per file, a cross-file pass and an independent check with confidence"
+git push
