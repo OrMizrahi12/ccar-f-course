@@ -1,0 +1,42 @@
+Lesson 5.5: Plan mode or direct execution. Every command, prompt and key in the lesson, in order (macOS and Linux).
+Windows: see README.md (single quotes around a message with $ in PowerShell too; the plans folder).
+Run everything from your harborline folder, with .venv active (the prompt starts with (.venv)), unless a line says otherwise.
+Claude makes the file changes; the kit's harborline/ files show the end state. No API calls: Claude Code runs on your Claude sign-in.
+
+1. Direct: the $75 rule
+   cd ~/projects/harborline
+   git status --short                       (nothing: the tree is clean)
+   claude                                   the status line: auto mode on (shift+tab to cycle)
+     type:
+       Free shipping starts at orders of $75.00 or more, as data/refund_policy.md says. Fix the comparison in legacy/warehouse/shipping.py and update its test, then run that test file.
+                                            no plan, no approval menu: edits shipping.py and tests/test_legacy.py,
+                                            runs the test file, loads .claude/rules/testing.md, runs the full suite
+     (scroll up through the diff)
+     /exit
+   clear
+   git diff --stat                          2 files changed, 5 insertions(+), 5 deletions(-)
+   git commit -am 'Lesson 5.5: free shipping from $75.00 (>=), as the refund policy says'
+                                            single quotes: the shell leaves $75 alone
+
+2. Plan: retire the shim
+   clear
+   claude
+     Shift+Tab                              manual mode on
+     Shift+Tab                              accept edits on
+     Shift+Tab                              plan mode on
+     type:
+       Use the Explore subagent to find everything that depends on legacy/warehouse/compat.py, then plan how to retire it.
+                                            Explore(Find compat.py dependents), a backgrounded agent; then the plan
+                                            and the menu: 1 Yes, and use auto mode / 2 Yes, manually approve edits /
+                                            3 Tell Claude what to change   (Ctrl+G opens the plan in your editor)
+     (scroll up and read the plan: the kit's the-plan.md is the lesson's)
+
+3. Approve, run, share
+     1                                      yes, and use auto mode: the edits, compat.py deleted, the tests and the grep
+     (scroll up through the edits)
+     /exit
+   clear
+   git status --short                       M legacy/warehouse/__init__.py / D legacy/warehouse/compat.py / M tests/test_legacy.py
+   git add -A legacy tests
+   git commit -m "Lesson 5.5: retire legacy/warehouse/compat.py after a plan"
+   git push
