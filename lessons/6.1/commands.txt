@@ -1,0 +1,42 @@
+# Lesson 6.1: Claude Code without a human. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, on main, clean, with (.venv) active.
+# jq must be installed (see README.md, "Windows, macOS and Linux").
+
+# --- Before the lesson (once): the teammate's branch the lesson reviews ---
+# Copy late_refunds.py from this kit into harborline/harborline/ first.
+git switch -c late-refunds
+git add harborline/late_refunds.py
+git commit -m "Late-delivery refund estimates for the weekly report"
+git push -u origin late-refunds
+git switch main
+
+# --- Step 1: headless ---
+git status --short
+set -a; source .env; set +a
+git fetch -q && git log --oneline main..origin/late-refunds
+git diff main...origin/late-refunds --stat
+git diff main...origin/late-refunds | claude -p "In one sentence, what does this change do?"; echo "exit code $?"
+
+# --- Step 2: a findings schema ---
+mkdir -p ci
+code ci/findings.schema.json
+# Type or paste ci/findings.schema.json from this kit, then save (Ctrl+S).
+
+# --- Step 3: the review as JSON ---
+clear
+git diff main...origin/late-refunds | claude -p "Review this diff for bugs and for breaks of this project's conventions. Report each finding with its file and line." --output-format json --json-schema "$(cat ci/findings.schema.json)" > /tmp/review.json; echo "exit code $?"
+jq .structured_output /tmp/review.json
+clear
+jq '{turns: .num_turns, cost: .total_cost_usd, session: .session_id}' /tmp/review.json
+
+# --- Step 4: where the rules come from ---
+clear
+Q="Without reading any files: quote the conventions you were given for this repository, or say there are none. Nothing else."
+claude -p "$Q"
+claude --bare -p "$Q"
+claude --bare -p "$Q" --append-system-prompt-file CLAUDE.md
+clear
+git status --short
+git add ci/findings.schema.json
+git commit -m "Lesson 6.1: ci/findings.schema.json for headless reviews"
+git push
