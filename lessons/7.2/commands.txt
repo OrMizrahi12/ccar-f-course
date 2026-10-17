@@ -1,0 +1,58 @@
+# Lesson 7.2: Schemas that don't invite fabrication. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 7.1 commit, with (.venv) active.
+# extract.py loads your Anthropic API key from .env (Lesson 0.4). Keep the model in harborline/config.py at claude-haiku-5-5.
+# Nine runs, two calls each (D10 stops after one): under a cent.
+
+# --- Step 1: every field required ---
+git status --short
+code requirements.txt
+# Add the line pydantic==2.14.1 (it came with the anthropic package; now it's pinned). Save (Ctrl+S).
+code extraction/schema.py
+# Type schema.py's first version: Strict (extra="forbid"), Metadata (doc_type: invoice / credit_note / other, supplier_name),
+# LineItem, Document. Every field required, none can be None. Save.
+code extraction/extract.py
+# The hand-written schemas go (ITEM, record_tool, the EXTRACT_METADATA dict, RECORDERS). In their place:
+#   from anthropic import transform_schema / from extraction import schema
+#   def tool(name, description, model): a strict tool whose input_schema is transform_schema(model)
+#   EXTRACT_METADATA = tool(..., schema.Metadata); RECORD_DOCUMENT = tool(..., schema.Document)
+#   call(client, text, tool) forces that one tool; extract() classifies first, then returns meta | the record. Save.
+clear
+cat data/invoices/dev/INV-D06.txt
+clear
+python -m extraction.extract data/invoices/dev/INV-D06.txt
+clear
+cat data/invoices/dev/INV-D11.txt
+clear
+python -m extraction.extract data/invoices/dev/INV-D11.txt
+
+# --- Step 2: nullable, other and unclear ---
+code extraction/schema.py
+# The docstring: "A field the document doesn't state is None: never a guess." doc_type gains "unclear"; doc_type_detail:
+# str | None = Field(description="What the document is, only when doc_type is other or unclear"); | None on every field a
+# document may lack (invoice_number .. currency, subtotal .. stated_total). Save.
+clear
+python -m extraction.extract data/invoices/dev/INV-D06.txt
+clear
+python -m extraction.extract data/invoices/dev/INV-D11.txt
+clear
+python -m extraction.extract data/invoices/dev/INV-D10.txt
+clear
+python -m extraction.extract data/invoices/dev/INV-D01.txt
+
+# --- Step 3: rules next to the schema ---
+code extraction/extract.py
+# Add RULES under the tools (harborline/extraction/extract.py in this kit) and send them before the document:
+#   messages=[{"role": "user", "content": f"{RULES}\n<document>\n{text}\n</document>"}]. Save.
+clear
+python -m extraction.extract data/invoices/dev/INV-D01.txt
+clear
+cat data/invoices/dev/INV-D03.txt
+clear
+python -m extraction.extract data/invoices/dev/INV-D03.txt
+
+# --- Commit and push ---
+clear
+git status --short
+git add requirements.txt extraction
+git commit -m "Lesson 7.2: Pydantic schema with nullable fields, unclear and other, normalization rules"
+git push
