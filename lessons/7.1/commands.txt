@@ -1,0 +1,44 @@
+# Lesson 7.1: Structured output with tool use. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 6.6 commit, with (.venv) active.
+# extract.py loads your Anthropic API key from .env (Lesson 0.4). Keep the model in harborline/config.py at claude-haiku-5-5.
+# Five runs, seven calls in all: well under a cent.
+
+# --- Step 1: one invoice, one tool ---
+git status --short
+clear
+cat data/invoices/dev/INV-D01.txt
+mkdir extraction && touch extraction/__init__.py
+code extraction/extract.py
+# Type version 1: ITEM, record_tool(), RECORD_INVOICE, call(), extract() forcing record_invoice
+# ({"type": "tool", "name": "record_invoice"}), and the bottom block that prints the tool's name and the record. Save (Ctrl+S).
+clear
+python -m extraction.extract data/invoices/dev/INV-D01.txt
+
+# --- Step 2: two kinds of documents ---
+code extraction/extract.py
+# Version 2: extract() passes TOOLS with {"type": "any"}; add RECORD_CREDIT_NOTE and TOOLS under RECORD_INVOICE. Save.
+clear
+python -m extraction.extract data/invoices/dev/INV-D09.txt
+clear
+cat data/invoices/dev/INV-D10.txt
+clear
+python -m extraction.extract data/invoices/dev/INV-D10.txt
+
+# --- Step 3: classify first, strict schemas ---
+code extraction/extract.py
+# The final version (harborline/extraction/extract.py in this kit): the totals line; extract() forces extract_metadata first,
+# skips "other", then forces the matching recorder; EXTRACT_METADATA and RECORDERS; "strict": True on every tool and
+# "additionalProperties": False on every object. Save.
+clear
+python -m extraction.extract data/invoices/dev/INV-D10.txt
+clear
+cat data/invoices/dev/INV-D07.txt
+clear
+python -m extraction.extract data/invoices/dev/INV-D07.txt
+
+# --- Commit and push ---
+clear
+git status --short
+git add extraction
+git commit -m "Lesson 7.1: extraction with a forced tool, metadata first, strict schemas"
+git push
