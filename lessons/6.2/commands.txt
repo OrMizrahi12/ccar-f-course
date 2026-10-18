@@ -1,0 +1,53 @@
+# Lesson 6.2: A pull-request review pipeline. Every command in the lesson, in order.
+# Run from your harborline folder in the VS Code terminal, at the Lesson 6.1 commit on main, with (.venv) active.
+# The GitHub CLI (gh) must be signed in to your account: gh auth status
+# Each review runs in GitHub Actions on your Anthropic API key, stored as a repository secret (step 3).
+# In the lesson the two runs cost $0.0832 and $0.1247 (Claude Code's default model; see the README for --model).
+
+# --- The starting point ---
+git status --short
+
+# --- Step 1: the workflow ---
+mkdir -p .github/workflows
+code .github/workflows/pr-review.yml
+# Type the workflow (18 lines; harborline/.github/workflows/pr-review.yml in this kit), then save (Ctrl+S).
+
+# --- Step 2: the review script ---
+code ci/review.py
+# Type the review script (95 lines; harborline/ci/review.py in this kit), then save.
+code ci/findings.schema.json
+# Add the status property ("new" or "still_open") and add "status" to required
+# (harborline/ci/findings.schema.json in this kit), then save.
+clear
+git status --short
+git add .github ci
+git commit -m "Lesson 6.2: review every pull request with Claude Code in GitHub Actions"
+git push
+
+# --- Step 3: open the pull request ---
+# Once, before the first run (not filmed): store your API key as a repository secret.
+# gh asks for the value; paste the key from your .env and press Enter. It is never shown again.
+#   gh secret set ANTHROPIC_API_KEY -R <your-account>/harborline
+clear
+gh repo set-default <your-account>/harborline
+gh secret list -R <your-account>/harborline
+gh pr create --base main --head late-refunds --title "Late-delivery refund estimates" --body "Refund estimates for the weekly report."
+# The lesson used --base lesson-6.2 (a branch at this lesson's commit); on your own repository the base is main.
+N=$(gh pr view late-refunds --json number -q .number); echo $N
+sleep 10; gh run watch --exit-status "$(gh run list -w pr-review.yml -L 1 --json databaseId -q '.[0].databaseId')"
+clear
+gh api repos/{owner}/{repo}/pulls/$N/comments --jq '.[] | "\(.path):\(.line)\n\(.body)\n"'
+clear
+gh pr view $N --comments
+
+# --- Step 4: push a fix, review again (you play the teammate) ---
+clear
+N=$(gh pr view late-refunds --json number -q .number); git switch late-refunds && git pull -q
+code harborline/late_refunds.py
+# Replace the whole file with the fix (9 lines; harborline/harborline/late_refunds.py in this kit), then save.
+clear
+git commit -am "Use the refund policy for late deliveries" && git push -q
+sleep 10; gh run watch --exit-status "$(gh run list -w pr-review.yml -L 1 --json databaseId -q '.[0].databaseId')"
+clear
+gh pr view $N --comments
+git switch main
